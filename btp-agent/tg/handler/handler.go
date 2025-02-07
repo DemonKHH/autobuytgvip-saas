@@ -2,8 +2,9 @@ package handler
 
 import (
 	"fmt"
-	tele "gopkg.in/telebot.v3"
 	"strings"
+
+	tele "gopkg.in/telebot.v3"
 )
 
 const (
@@ -53,7 +54,7 @@ func CloseHandler(ctx tele.Context) error {
 }
 
 func SupportHandler(ctx tele.Context) error {
-	return ctx.Send(EscapeText(tele.ModeMarkdownV2, "t.me/feijige120"))
+	return ctx.Send(EscapeText(tele.ModeMarkdownV2, "t.me/demonkinghaha"))
 }
 
 func HelpHandler(ctx tele.Context) error {
