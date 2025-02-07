@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -75,7 +74,7 @@ func CreatePayOrder(conf config.PayConf, order *model.Order) (result CreateEpusd
 		return
 	}
 	if result.StatusCode != 200 {
-		err = errors.New(fmt.Sprintf("epusdt order create fail, code = %d", result.StatusCode))
+		err = fmt.Errorf("epusdt order create fail, code = %d", result.StatusCode)
 		return
 	}
 
@@ -112,7 +111,7 @@ func CreateEpusdtPayment(orderNo string, usdtAmount float64, notifyUrl string) (
 	_ = json.Unmarshal(b, &m)
 	signature, _ := epusdt.Sign(m, conf.ApiToken)
 	req.Signature = signature
-
+	print("req %v", req)
 	resp, err := httpc.Do(context.Background(), http.MethodPost, api, req)
 	if err != nil {
 		return
@@ -127,7 +126,7 @@ func CreateEpusdtPayment(orderNo string, usdtAmount float64, notifyUrl string) (
 		return
 	}
 	if result.StatusCode != 200 {
-		err = errors.New(fmt.Sprintf("epusdt order create fail, code = %d", result.StatusCode))
+		err = fmt.Errorf("epusdt order create fail, code = %d", result.StatusCode)
 		return
 	}
 
