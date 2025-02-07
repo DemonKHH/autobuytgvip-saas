@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -107,10 +108,13 @@ func CreateEpusdtPayment(orderNo string, usdtAmount float64, notifyUrl string) (
 		NotifyUrl: notifyUrl,
 	}
 	var m = make(map[string]interface{})
+	log.Printf("epusdt req: %v", req)
 	b, _ := json.Marshal(req)
+	log.Printf("epusdt req json: %v", string(b))
 	_ = json.Unmarshal(b, &m)
 	signature, _ := epusdt.Sign(m, conf.ApiToken)
 	req.Signature = signature
+	log.Printf("epusdt req: %v", req)
 	resp, err := httpc.Do(context.Background(), http.MethodPost, api, req)
 	if err != nil {
 		return
