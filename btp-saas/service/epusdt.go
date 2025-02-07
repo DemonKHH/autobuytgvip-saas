@@ -123,6 +123,7 @@ func CreateEpusdtPayment(orderNo string, usdtAmount float64, notifyUrl string) (
 	if err != nil {
 		return
 	}
+	log.Printf("epusdt resp: %v", string(bytes))
 	result = CreateEpusdtPaymentResponse{}
 	err = json.Unmarshal(bytes, &result)
 	if err != nil {
