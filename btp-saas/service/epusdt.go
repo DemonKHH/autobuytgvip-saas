@@ -48,7 +48,7 @@ func CreatePayOrder(conf config.PayConf, order *model.Order) (result CreateEpusd
 	// 这里CNY与USDT的价格先写死，后面做动态的
 	// todo 生产环境里强制设置了汇率是1，所以这里不需要考虑汇率了
 	amount, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", order.UsdtAmount), 64)
-
+	print("order info %v", order)
 	req := CreateEpusdtPaymentRequest{
 		OrderId:   order.OrderNo,
 		Amount:    amount,
