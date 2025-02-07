@@ -107,4 +107,4 @@ CREATE TABLE `withdraw`  (
 SET FOREIGN_KEY_CHECKS = 1;
 
 
-INSERT INTO `btp_saas`.`param` (`k`, `v1`, `v2`, `v3`, `v4`, `v5`, `v6`, `remark`) VALUES ('base_price', '13', '17', '30', NULL, NULL, NULL, '平台底价，v1、v2、v3分别为3,6,12个月的会员价');
+INSERT INTO `btp_saas`.`param` (`k`, `v1`, `v2`, `v3`, `v4`, `v5`, `v6`, `remark`) VALUES ('base_price', '15', '20', '35', NULL, NULL, NULL, '平台底价，v1、v2、v3分别为3,6,12个月的会员价');

@@ -90,7 +90,11 @@ func BotTokenHandler(ctx tele.Context) error {
 	}
 	err = bot.SetWebhook(webhook)
 	if err != nil {
-		return ctx.Send("机器人配置失败")
+		// 打印更详细的错误信息
+		fmt.Printf("机器人配置失败: %v\n", err)                    // 使用 fmt.Printf，而不是 print
+		fmt.Printf("Webhook 配置: %+v\n", webhook)            // 打印 Webhook 的配置信息，方便调试
+		fmt.Printf("AppConfig: %+v\n", global.Conf.AppConf) // 打印 AppConfig 配置信息，方便调试
+		return ctx.Send("机器人配置失败: " + err.Error())          //将错误信息发送给用户
 	}
 
 	return ctx.Send("机器人Token设置成功")
