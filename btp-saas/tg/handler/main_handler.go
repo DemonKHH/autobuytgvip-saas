@@ -160,6 +160,7 @@ func CreateTelegramPremiumOrder(ctx tele.Context) error {
 		TgChatID:          ctx.Chat().ID,
 		TgMsgID:           0, //先置零，登消息发出去后得到消息id后再更新
 	}
+	log.Printf("order: %+v\n", order)
 	res, err := service.CreateOrder(order)
 	if err != nil {
 		log.Printf("fail to create order: %v\n", err)
@@ -180,8 +181,7 @@ func CreateTelegramPremiumOrder(ctx tele.Context) error {
 		File:    tele.FromReader(image.GenQrcode(res.Token)),
 		Caption: replyText,
 	}
-	msg, err := ctx.Bot().Send(ctx.Recipient(), context, replyMarkup)
-
+	msg, _ := ctx.Bot().Send(ctx.Recipient(), context, replyMarkup)
 	_, err = o.Where(o.OrderNo.Eq(order.OrderNo)).Update(o.TgMsgID, msg.ID)
 	return err
 }
