@@ -110,15 +110,29 @@ type GetGiftPremiumLinkRequest struct {
 }
 
 type GetGiftPremiumLinkResponse struct {
-	Ok          bool        `json:"ok"`
-	Link        string      `json:"link"`
-	QrLink      string      `json:"qr_link"`
-	CheckMethod string      `json:"check_method"`
-	CheckParams CheckParams `json:"check_params"`
-	ExpireAfter int         `json:"expire_after"`
+	Ok            bool          `json:"ok"`
+	Transaction   Transaction   `json:"transaction"`
+	ConfirmMethod string        `json:"confirm_method"`
+	ConfirmParams ConfirmParams `json:"confirm_params"`
 }
-type CheckParams struct {
-	Id string `json:"id"`
+
+// Transaction represents the top-level transaction object.
+type Transaction struct {
+	ValidUntil int64     `json:"validUntil"`
+	From       string    `json:"from"`
+	Messages   []Message `json:"messages"`
+}
+
+// Message represents a single message within the transaction.
+type Message struct {
+	Address string `json:"address"`
+	Amount  uint64 `json:"amount"`
+	Payload string `json:"payload"`
+}
+
+// ConfirmParams represents the confirmation parameters.
+type ConfirmParams struct {
+	ID string `json:"id"`
 }
 
 func GetGiftPremiumLink(reqId string) (result GetGiftPremiumLinkResponse, err error) {

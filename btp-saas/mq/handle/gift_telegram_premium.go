@@ -105,14 +105,14 @@ func buyTelegramPremium(tgUsername string, vipMonth int) (fragmentRefId string, 
 		return
 	}
 	log.Printf("result3: %v", result3)
-	info, err := fragment.GetTonPaymentInfo(result3.CheckParams.Id)
-	if err != nil {
-		return
+	if result3.Ok != true {
+		return "", errors.New("get gift premium link fail")
 	}
+	info := result3.Transaction
 	log.Printf("info: %v", info)
-	receiverAddress := info.Body.Params.Messages[0].Address
-	amount := info.Body.Params.Messages[0].Amount
-	payload := info.Body.Params.Messages[0].Payload
+	receiverAddress := info.Messages[0].Address
+	amount := info.Messages[0].Amount
+	payload := info.Messages[0].Payload
 
 	decodeBytes, err := base64.RawStdEncoding.DecodeString(payload)
 	if err != nil {

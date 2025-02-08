@@ -20,12 +20,15 @@ func TestSearchPremiumGiftRecipient(t *testing.T) {
 	result3, _ := GetGiftPremiumLink(result2.ReqId)
 	fmt.Printf("获取Telegr会员：%+v\n", result3)
 
-	info, _ := GetTonPaymentInfo(result3.CheckParams.Id)
-	fmt.Printf("支付信息：%+v\n", info)
+	if !result3.Ok {
+		fmt.Print("获取Telegr会员失败\n")
+		return
+	}
+	info := result3.Transaction
 
-	receiverAddress := info.Body.Params.Messages[0].Address
-	amount := info.Body.Params.Messages[0].Amount
-	payload := info.Body.Params.Messages[0].Payload
+	receiverAddress := info.Messages[0].Address
+	amount := info.Messages[0].Amount
+	payload := info.Messages[0].Payload
 
 	decodeBytes, _ := base64.RawStdEncoding.DecodeString(payload)
 	arr := strings.Split(string(decodeBytes), "#")
