@@ -8,6 +8,7 @@ import (
 )
 
 func TestSearchPremiumGiftRecipient(t *testing.T) {
+
 	duration := 3
 
 	result1, _ := SearchPremiumGiftRecipient("@minggetg", duration)

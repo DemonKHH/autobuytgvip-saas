@@ -99,11 +99,14 @@ func InitGiftPremium(recipient string, duration int) (result InitGiftPremiumResp
 }
 
 type GetGiftPremiumLinkRequest struct {
-	Cookie     string `header:"cookie"`
-	Id         string `form:"id"`
-	ShowSender int    `form:"show_sender"`
-	Months     int    `form:"months"`
-	Method     string `form:"method"`
+	Cookie      string `header:"cookie"`
+	Id          string `form:"id"`
+	ShowSender  int    `form:"show_sender"`
+	Months      int    `form:"months"`
+	Method      string `form:"method"`
+	Transaction int    `form:"transaction"`
+	Account     string `form:"account"`
+	Device      string `form:"device"`
 }
 
 type GetGiftPremiumLinkResponse struct {
@@ -119,12 +122,18 @@ type CheckParams struct {
 }
 
 func GetGiftPremiumLink(reqId string) (result GetGiftPremiumLinkResponse, err error) {
+	// 正确的 JSON 字符串 (注意引号的转义)
+	accountJSON := `{"address":"0:3a7d7318b5d38d910f0cf68fc4d60b95c889b87e365ea00db05ab11fc9e5f523","chain":"-239","walletStateInit":"te6cckECFgEAAwQAAgE0ARUBFP8A9KQT9LzyyAsCAgEgAxACAUgEBwLm0AHQ0wMhcbCSXwTgItdJwSCSXwTgAtMfIYIQcGx1Z70ighBkc3RyvbCSXwXgA/pAMCD6RAHIygfL/8nQ7UTQgQFA1yH0BDBcgQEI9ApvoTGzkl8H4AXTP8glghBwbHVnupI4MOMNA4IQZHN0crqSXwbjDQUGAHgB+gD0BDD4J28iMFAKoSG+8uBQghBwbHVngx6xcIAYUATLBSbPFlj6Ahn0AMtpF8sfUmDLPyDJgED7AAYAilAEgQEI9Fkw7UTQgQFA1yDIAc8W9ADJ7VQBcrCOI4IQZHN0coMesXCAGFAFywVQA88WI/oCE8tqyx/LP8mAQPsAkl8D4gIBIAgPAgEgCQ4CAVgKCwA9sp37UTQgQFA1yH0BDACyMoHy//J0AGBAQj0Cm+hMYAIBIAwNABmtznaiaEAga5Drhf/AABmvHfaiaEAQa5DrhY/AABG4yX7UTQ1wsfgAWb0kK29qJoQICga5D6AhhHDUCAhHpJN9KZEM5pA+n/mDeBKAG3gQFImHFZ8xhAT48oMI1xgg0x/TH9MfAvgju/Jk7UTQ0x/TH9P/9ATRUUO68qFRUbryogX5AVQQZPkQ8qP4ACSkyMsfUkDLH1Iwy/9SEPQAye1U+A8B0wchwACfbFGTINdKltMH1AL7AOgw4CHAAeMAIcAC4wABwAORMOMNA6TIyx8Syx/L/xESExQAbtIH+gDU1CL5AAXIygcVy//J0Hd0gBjIywXLAiLPFlAF+gIUy2sSzMzJc/sAyEAUgQEI9FHypwIAcIEBCNcY+gDTP8hUIEeBAQj0UfKnghBub3RlcHSAGMjLBcsCUAbPFlAE+gIUy2oSyx/LP8lz+wACAGyBAQjXGPoA0z8wUiSBAQj0WfKnghBkc3RycHSAGMjLBcsCUAXPFlAD+gITy2rLHxLLP8lz+wAACvQAye1UAFEAAAAAKamjF4x3DHeYFf9NS3Wc5G0ZiWLw03yqwgISSNu5LERScRlnQA1I5nI=","publicKey":"8c770c779815ff4d4b759ce46d198962f0d37caac2021248dbb92c4452711967"}`
+	deviceJSON := `{"platform":"web","appName":"tonwallet","appVersion":"1.1.49","maxProtocolVersion":2,"features":["SendTransaction",{"name":"SendTransaction","maxMessages":4}]}`
 	fragmentUrl := fmt.Sprintf("https://fragment.com/api?hash=%s", global.Conf.AppConf.Hash)
 	req := GetGiftPremiumLinkRequest{
-		Cookie:     global.Conf.AppConf.Cookie,
-		Id:         reqId,
-		ShowSender: 0,
-		Method:     "getGiftPremiumLink",
+		Cookie:      global.Conf.AppConf.Cookie,
+		Id:          reqId,
+		ShowSender:  0,
+		Transaction: 1,
+		Method:      "getGiftPremiumLink",
+		Account:     accountJSON,
+		Device:      deviceJSON,
 	}
 	resp, err := httpc.Do(context.Background(), http.MethodPost, fragmentUrl, req)
 	if err != nil {
