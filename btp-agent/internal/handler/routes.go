@@ -4,7 +4,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-agent/internal/svc"
+	"btp-agent/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

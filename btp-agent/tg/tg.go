@@ -6,9 +6,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-agent/global"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-agent/internal/config"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-agent/tg/handler"
+	"btp-agent/global"
+	"btp-agent/internal/config"
+	"btp-agent/tg/handler"
+
 	tele "gopkg.in/telebot.v3"
 	"gopkg.in/telebot.v3/middleware"
 )

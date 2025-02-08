@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-agent/internal/config"
+	"btp-agent/internal/config"
 )
 
 var (

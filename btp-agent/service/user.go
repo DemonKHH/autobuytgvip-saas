@@ -5,8 +5,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-agent/dao/model"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-agent/dao/query"
+	"btp-agent/dao/model"
+	"btp-agent/dao/query"
+
 	tele "gopkg.in/telebot.v3"
 	"gorm.io/gen/field"
 	"gorm.io/gorm"

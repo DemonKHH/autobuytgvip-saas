@@ -6,8 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-agent/dao/query"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-agent/service"
+	"btp-agent/dao/query"
+	"btp-agent/service"
+
 	tele "gopkg.in/telebot.v3"
 )
 

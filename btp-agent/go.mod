@@ -1,4 +1,4 @@
-module github.com/buyaobilian1/autobuytgvip-saas/btp-agent
+module btp-agent
 
 go 1.21.1
 

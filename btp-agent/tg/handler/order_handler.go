@@ -8,9 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-agent/dao/model"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-agent/dao/query"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-agent/service"
+	"btp-agent/dao/model"
+	"btp-agent/dao/query"
+	"btp-agent/service"
+
 	tele "gopkg.in/telebot.v3"
 )
 
