@@ -7,7 +7,8 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/global"
+	"btp-saas/global"
+
 	"github.com/zeromicro/go-zero/rest/httpc"
 )
 

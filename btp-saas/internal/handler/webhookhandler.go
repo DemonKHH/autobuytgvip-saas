@@ -8,8 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/internal/svc"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/tg"
+	"btp-saas/internal/svc"
+	"btp-saas/tg"
+
 	"github.com/zeromicro/go-zero/rest/httpx"
 	tele "gopkg.in/telebot.v3"
 )

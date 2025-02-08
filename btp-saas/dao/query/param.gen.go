@@ -16,7 +16,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/model"
+	"btp-saas/dao/model"
 )
 
 func newParam(db *gorm.DB, opts ...gen.DOOption) param {

@@ -1,7 +1,7 @@
 package svc
 
 import (
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/internal/config"
+	"btp-saas/internal/config"
 )
 
 type ServiceContext struct {

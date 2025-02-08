@@ -5,7 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/query"
+	"btp-saas/dao/query"
+
 	tele "gopkg.in/telebot.v3"
 )
 

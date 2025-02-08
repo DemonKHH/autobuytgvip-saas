@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/service"
+	"btp-saas/service"
+
 	tele "gopkg.in/telebot.v3"
 )
 

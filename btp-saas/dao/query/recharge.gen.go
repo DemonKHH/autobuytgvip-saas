@@ -16,7 +16,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/model"
+	"btp-saas/dao/model"
 )
 
 func newRecharge(db *gorm.DB, opts ...gen.DOOption) recharge {

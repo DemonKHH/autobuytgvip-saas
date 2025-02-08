@@ -5,7 +5,8 @@ import (
 	"errors"
 	"log"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/global"
+	"btp-saas/global"
+
 	"github.com/tonkeeper/tongo"
 	"github.com/tonkeeper/tongo/liteapi"
 	"github.com/tonkeeper/tongo/tlb"

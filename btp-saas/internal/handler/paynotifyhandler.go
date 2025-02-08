@@ -3,9 +3,10 @@ package handler
 import (
 	"net/http"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/internal/logic"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/internal/svc"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/internal/types"
+	"btp-saas/internal/logic"
+	"btp-saas/internal/svc"
+	"btp-saas/internal/types"
+
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 

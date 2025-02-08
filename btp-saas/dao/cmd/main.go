@@ -1,7 +1,8 @@
 package main
 
 import (
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/model"
+	"btp-saas/dao/model"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gen"
 	"gorm.io/gorm"

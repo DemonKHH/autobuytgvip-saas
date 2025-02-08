@@ -3,9 +3,10 @@ package handle
 import (
 	"context"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/query"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/global"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/pkg/proxy"
+	"btp-saas/dao/query"
+	"btp-saas/global"
+	"btp-saas/pkg/proxy"
+
 	"github.com/hibiken/asynq"
 	tele "gopkg.in/telebot.v3"
 )

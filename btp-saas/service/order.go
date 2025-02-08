@@ -5,11 +5,12 @@ import (
 	"log"
 	"time"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/model"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/query"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/global"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/mq"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/mq/handle"
+	"btp-saas/dao/model"
+	"btp-saas/dao/query"
+	"btp-saas/global"
+	"btp-saas/mq"
+	"btp-saas/mq/handle"
+
 	"github.com/hibiken/asynq"
 )
 

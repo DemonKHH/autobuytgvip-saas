@@ -10,7 +10,7 @@ import (
 func TestSearchPremiumGiftRecipient(t *testing.T) {
 	duration := 3
 
-	result1, _ := SearchPremiumGiftRecipient("@king3670", duration)
+	result1, _ := SearchPremiumGiftRecipient("@minggetg", duration)
 	fmt.Printf("查询Telegram用户信息：%+v\n", result1)
 
 	result2, _ := InitGiftPremium(result1.Found.Recipient, duration)

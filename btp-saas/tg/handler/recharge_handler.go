@@ -7,11 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/model"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/query"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/pkg/id"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/pkg/image"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/service"
+	"btp-saas/dao/model"
+	"btp-saas/dao/query"
+	"btp-saas/pkg/id"
+	"btp-saas/pkg/image"
+	"btp-saas/service"
+
 	tele "gopkg.in/telebot.v3"
 )
 

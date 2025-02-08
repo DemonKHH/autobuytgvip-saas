@@ -3,8 +3,9 @@ package mq
 import (
 	"log"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/internal/config"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/mq/handle"
+	"btp-saas/internal/config"
+	"btp-saas/mq/handle"
+
 	"github.com/hibiken/asynq"
 )
 

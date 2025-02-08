@@ -6,8 +6,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/query"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/internal/config"
+	"btp-saas/dao/query"
+	"btp-saas/internal/config"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

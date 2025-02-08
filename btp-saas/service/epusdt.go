@@ -10,13 +10,14 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/model"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/query"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/global"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/internal/config"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/mq"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/mq/handle"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/pkg/epusdt"
+	"btp-saas/dao/model"
+	"btp-saas/dao/query"
+	"btp-saas/global"
+	"btp-saas/internal/config"
+	"btp-saas/mq"
+	"btp-saas/mq/handle"
+	"btp-saas/pkg/epusdt"
+
 	"github.com/hibiken/asynq"
 	"github.com/zeromicro/go-zero/rest/httpc"
 )

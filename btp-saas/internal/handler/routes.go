@@ -2,7 +2,7 @@
 package handler
 
 import (
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/internal/svc"
+	"btp-saas/internal/svc"
 	"github.com/zeromicro/go-zero/rest"
 	"net/http"
 )

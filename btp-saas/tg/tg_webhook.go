@@ -1,17 +1,18 @@
 package tg
 
 import (
+	"btp-saas/dao/model"
+	"btp-saas/dao/query"
+	"btp-saas/global"
+	"btp-saas/pkg/proxy"
+	"btp-saas/tg/handler"
 	"errors"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/model"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/dao/query"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/global"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/pkg/proxy"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/tg/handler"
-	tele "gopkg.in/telebot.v3"
-	"gopkg.in/telebot.v3/middleware"
 	"log"
 	"regexp"
 	"strings"
+
+	tele "gopkg.in/telebot.v3"
+	"gopkg.in/telebot.v3/middleware"
 )
 
 func GetBotInstance(botId int64) (*tele.Bot, error) {

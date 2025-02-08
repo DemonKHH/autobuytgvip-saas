@@ -1,4 +1,4 @@
-module github.com/buyaobilian1/autobuytgvip-saas/btp-saas
+module btp-saas
 
 go 1.21.1
 

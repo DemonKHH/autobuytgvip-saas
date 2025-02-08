@@ -3,8 +3,9 @@ package logic
 import (
 	"context"
 
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/internal/svc"
-	"github.com/buyaobilian1/autobuytgvip-saas/btp-saas/internal/types"
+	"btp-saas/internal/svc"
+	"btp-saas/internal/types"
+
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
