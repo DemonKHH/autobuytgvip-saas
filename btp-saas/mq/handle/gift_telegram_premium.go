@@ -23,10 +23,12 @@ import (
 const GiftTelegramPremiumPattern = "premium:gift"
 
 func NewGiftTelegramPremiumTask(orderNo string) (*asynq.Task, error) {
+	log.Printf("NewGiftTelegramPremiumTask")
 	return asynq.NewTask(GiftTelegramPremiumPattern, []byte(orderNo)), nil
 }
 
 func GiftTelegramPremiumHandler(ctx context.Context, t *asynq.Task) error {
+	log.Printf("GiftTelegramPremiumHandler")
 	var o, u = query.Order, query.User
 	orderNo := string(t.Payload())
 	// 获取并判断订单信息
@@ -87,26 +89,27 @@ var tonCommentFormats = map[int]string{
 
 // BuyTelegramPremium 支付成功后后台进行购买的流程
 func buyTelegramPremium(tgUsername string, vipMonth int) (fragmentRefId string, err error) {
+	log.Printf("buyTelegramPremium")
 	result1, err := fragment.SearchPremiumGiftRecipient(tgUsername, vipMonth)
 	if err != nil {
 		return
 	}
-
+	log.Printf("result1: %v", result1)
 	result2, err := fragment.InitGiftPremium(result1.Found.Recipient, vipMonth)
 	if err != nil {
 		return
 	}
-
+	log.Printf("result2: %v", result2)
 	result3, err := fragment.GetGiftPremiumLink(result2.ReqId)
 	if err != nil {
 		return
 	}
-
+	log.Printf("result3: %v", result3)
 	info, err := fragment.GetTonPaymentInfo(result3.CheckParams.Id)
 	if err != nil {
 		return
 	}
-
+	log.Printf("info: %v", info)
 	receiverAddress := info.Body.Params.Messages[0].Address
 	amount := info.Body.Params.Messages[0].Amount
 	payload := info.Body.Params.Messages[0].Payload
