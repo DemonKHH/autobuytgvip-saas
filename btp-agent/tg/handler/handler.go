@@ -43,7 +43,7 @@ var (
 	SupportBtn  = tele.Btn{Unique: SupportBtnId, Text: "联系客服"}
 	WithDrawBtn = tele.Btn{Unique: WithDrawBtnId, Text: "提现"}
 
-	RechargeBtn = tele.Btn{Unique: RechargeBtnId, Text: "立即充值"}
+	// RechargeBtn = tele.Btn{Unique: RechargeBtnId, Text: "立即充值"}
 
 	BotTokenSettingBtn   = tele.Btn{Unique: BotTokenSettingBtnId, Text: "🤖机器人Token设置"}
 	AgentPriceSettingBtn = tele.Btn{Unique: AgentPriceSettingBtnId, Text: "💵代理销售价格设置"}

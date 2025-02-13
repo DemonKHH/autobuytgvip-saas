@@ -27,7 +27,7 @@ func MineKeyHandler(ctx tele.Context) error {
 
 	replyMarkup := &tele.ReplyMarkup{}
 	replyMarkup.Inline(
-		replyMarkup.Row(RechargeBtn),
+		// replyMarkup.Row(RechargeBtn),
 		replyMarkup.Row(CloseBtn, SupportBtn),
 	)
 

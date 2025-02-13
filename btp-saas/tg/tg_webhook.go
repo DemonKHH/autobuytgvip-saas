@@ -134,7 +134,7 @@ func setBiz(bot *tele.Bot) {
 	})
 
 	// 键盘处理
-	bot.Handle(&handler.RechargeKeyboard, handler.RechargeKeyHandler)
+	// bot.Handle(&handler.RechargeKeyboard, handler.RechargeKeyHandler)
 	bot.Handle(&handler.MineKeyboard, handler.MineKeyHandler)
 	bot.Handle(&handler.AgentKeyboard, handler.AgentKeyHandler)
 	bot.Handle(&handler.CooperationKeyboard, handler.CooperationKeyHandler)
