@@ -1,14 +1,22 @@
 package fragment
 
 import (
+	"btp-saas/global"
+	"btp-saas/internal/config"
 	"encoding/base64"
+	"flag"
 	"fmt"
 	"strings"
 	"testing"
+
+	"github.com/zeromicro/go-zero/core/conf"
 )
 
 func TestSearchPremiumGiftRecipient(t *testing.T) {
-
+	var configFile = flag.String("f", "C:\\Users\\59740\\Desktop\\autobuytgvip-saas\\btp-saas/etc/btp-saas.yaml", "the config file")
+	var c config.Config
+	conf.MustLoad(*configFile, &c)
+	global.Conf = c
 	duration := 3
 
 	result1, _ := SearchPremiumGiftRecipient("@minggetg", duration)
@@ -16,7 +24,7 @@ func TestSearchPremiumGiftRecipient(t *testing.T) {
 
 	result2, _ := InitGiftPremium(result1.Found.Recipient, duration)
 	fmt.Printf("初始化赠送Telegram会员请求：%+v\n", result2)
-
+	fmt.Printf("请求ID：%s\n", result2.ReqId)
 	result3, _ := GetGiftPremiumLink(result2.ReqId)
 	fmt.Printf("获取Telegr会员：%+v\n", result3)
 
