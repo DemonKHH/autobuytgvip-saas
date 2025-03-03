@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"strings"
+	"regexp"
 
 	"btp-saas/dao/model"
 	"btp-saas/dao/query"
@@ -21,6 +21,18 @@ import (
 )
 
 const GiftTelegramPremiumPattern = "premium:gift"
+
+// extractRefID 提取 Ref# 后面的内容
+func extractRefID(s string) string {
+	// 方法二：使用正则表达式
+	re := regexp.MustCompile(`Ref#([^\s]+)`)
+	matches := re.FindStringSubmatch(s)
+	if len(matches) > 1 {
+		return matches[1]
+	}
+
+	return ""
+}
 
 func NewGiftTelegramPremiumTask(orderNo string) (*asynq.Task, error) {
 	log.Printf("NewGiftTelegramPremiumTask")
@@ -118,10 +130,12 @@ func buyTelegramPremium(tgUsername string, vipMonth int) (fragmentRefId string, 
 	if err != nil {
 		return
 	}
-	arr := strings.Split(string(decodeBytes), "#")
-	fragmentRef := arr[1]
+	fragmentRef := extractRefID(string(decodeBytes))
+	log.Printf("fragmentRef: %s", fragmentRef)
 
-	err = blockchain.Transfer(receiverAddress, amount, fmt.Sprintf(tonCommentFormats[vipMonth], fragmentRef))
+	comment := fmt.Sprintf(tonCommentFormats[vipMonth], fragmentRef)
+	log.Printf("comment: %s", comment)
+	err = blockchain.Transfer(receiverAddress, amount, comment)
 	if err != nil {
 		return
 	}
