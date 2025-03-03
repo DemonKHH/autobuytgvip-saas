@@ -22,16 +22,13 @@ import (
 
 const GiftTelegramPremiumPattern = "premium:gift"
 
-// extractRefID 提取 Ref# 后面的内容
-func extractRefID(s string) string {
-	// 方法二：使用正则表达式
+func extractRefID(s string) (string, bool) {
 	re := regexp.MustCompile(`Ref#([^\s]+)`)
 	matches := re.FindStringSubmatch(s)
 	if len(matches) > 1 {
-		return matches[1]
+		return matches[1], true
 	}
-
-	return ""
+	return "", false
 }
 
 func NewGiftTelegramPremiumTask(orderNo string) (*asynq.Task, error) {
@@ -130,9 +127,12 @@ func buyTelegramPremium(tgUsername string, vipMonth int) (fragmentRefId string, 
 	if err != nil {
 		return
 	}
-	fragmentRef := extractRefID(string(decodeBytes))
+	fragmentRef, isValid := extractRefID(string(decodeBytes))
 	log.Printf("fragmentRef: %s", fragmentRef)
-
+	if !isValid {
+		log.Printf("extract ref id fail")
+		return "", errors.New("extract ref id fail")
+	}
 	comment := fmt.Sprintf(tonCommentFormats[vipMonth], fragmentRef)
 	log.Printf("comment: %s", comment)
 	err = blockchain.Transfer(receiverAddress, amount, comment)
