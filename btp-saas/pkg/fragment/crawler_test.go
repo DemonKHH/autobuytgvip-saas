@@ -6,20 +6,28 @@ import (
 	"encoding/base64"
 	"flag"
 	"fmt"
+	"log"
+	"regexp"
 	"strings"
 	"testing"
 
 	"github.com/zeromicro/go-zero/core/conf"
 )
 
+func removeInvalidChars4(s string) string {
+	re := regexp.MustCompile(`[^a-zA-Z0-9\-\_\.\[\]\(\)\{\}]`) //  Keep these characters
+	return re.ReplaceAllString(s, "")
+}
+
 func TestSearchPremiumGiftRecipient(t *testing.T) {
 	var configFile = flag.String("f", "C:\\Users\\59740\\Desktop\\autobuytgvip-saas\\btp-saas/etc/btp-saas.yaml", "the config file")
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 	global.Conf = c
+	log.Printf("global.Conf: %v", global.Conf)
 	duration := 3
 
-	result1, _ := SearchPremiumGiftRecipient("@minggetg", duration)
+	result1, _ := SearchPremiumGiftRecipient("@xiaoxue712", duration)
 	fmt.Printf("查询Telegram用户信息：%+v\n", result1)
 
 	result2, _ := InitGiftPremium(result1.Found.Recipient, duration)
@@ -39,9 +47,10 @@ func TestSearchPremiumGiftRecipient(t *testing.T) {
 	payload := info.Messages[0].Payload
 
 	decodeBytes, _ := base64.RawStdEncoding.DecodeString(payload)
-	arr := strings.Split(string(decodeBytes), "#")
-	orderSN := arr[1]
 
+	arr := strings.Split(string(decodeBytes), "#")
+	orderSN := removeInvalidChars4(arr[1])
+	fmt.Printf("订单号：%s\n", orderSN)
 	commentFormatter := `Telegram Premium for 3 months 
 
 Ref#%s`

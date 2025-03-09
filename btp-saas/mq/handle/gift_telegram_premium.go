@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 
 	"btp-saas/dao/model"
 	"btp-saas/dao/query"
@@ -22,13 +23,9 @@ import (
 
 const GiftTelegramPremiumPattern = "premium:gift"
 
-func extractRefID(s string) (string, bool) {
-	re := regexp.MustCompile(`Ref#([^\s]+)`)
-	matches := re.FindStringSubmatch(s)
-	if len(matches) > 1 {
-		return matches[1], true
-	}
-	return "", false
+func removeInvalidChars4(s string) string {
+	re := regexp.MustCompile(`[^a-zA-Z0-9\-\_\.\[\]\(\)\{\}]`) //  Keep these characters
+	return re.ReplaceAllString(s, "")
 }
 
 func NewGiftTelegramPremiumTask(orderNo string) (*asynq.Task, error) {
@@ -127,11 +124,11 @@ func buyTelegramPremium(tgUsername string, vipMonth int) (fragmentRefId string, 
 	if err != nil {
 		return
 	}
-	fragmentRef, isValid := extractRefID(string(decodeBytes))
+	arr := strings.Split(string(decodeBytes), "#")
+	fragmentRef := removeInvalidChars4(arr[1])
 	log.Printf("fragmentRef: %s", fragmentRef)
-	if !isValid {
-		log.Printf("extract ref id fail")
-		return "", errors.New("extract ref id fail")
+	if fragmentRef == "" {
+		return "", errors.New("fragment ref is empty")
 	}
 	comment := fmt.Sprintf(tonCommentFormats[vipMonth], fragmentRef)
 	log.Printf("comment: %s", comment)
