@@ -134,10 +134,10 @@ func buyTelegramPremium(tgUsername string, vipMonth int) (fragmentRefId string, 
 	log.Printf("comment: %s", comment)
 	err = blockchain.Transfer(receiverAddress, amount, comment)
 	if err != nil {
-		return
+		return "", err
 	}
 
-	return
+	return fragmentRef, nil
 }
 
 func updateSuccess(orderNo, fragmentRefId string) (err error) {
