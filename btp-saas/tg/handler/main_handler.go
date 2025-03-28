@@ -10,6 +10,8 @@ import (
 
 	"btp-saas/dao/model"
 	"btp-saas/dao/query"
+	"btp-saas/mq"
+	"btp-saas/mq/handle"
 	"btp-saas/pkg/fragment"
 	"btp-saas/pkg/id"
 	"btp-saas/pkg/image"
@@ -92,30 +94,22 @@ func BuyTwelveMonthHandler(ctx tele.Context) error {
 }
 
 func CreateTelegramPremiumOrder(ctx tele.Context) error {
-	var u, o, p = query.User, query.Order, query.Param
+	var u, p = query.User, query.Param
 	dbAgentUser, err := u.Where(u.BotID.Eq(ctx.Bot().Me.ID)).First()
 	if err != nil {
-		log.Printf("[db] query data fail, %v\n", err)
+		log.Printf("[db] 查询数据失败, %v\n", err)
 		return err
 	}
 	dbUser, err := u.Where(u.TgID.Eq(ctx.Sender().ID)).First()
 	if err != nil {
-		log.Printf("[db] query data fail, %v\n", err)
+		log.Printf("[db] 查询数据失败, %v\n", err)
 		return err
 	}
 	basePriceObj, err := p.Where(p.K.Eq("base_price")).First()
 	if err != nil {
-		log.Printf("[db] query data fail. %v\n", err)
+		log.Printf("[db] 查询数据失败. %v\n", err)
 		return err
 	}
-	orderFormatText := `❗️❗️❗️请注意：网络必须是TRC\-20，否则无法到账
-❗️❗️❗️请注意，金额必须与下面的一致（一位都不能少）
-👇*请向以下地址转账 %s USDT*
-
-%s
-
-👆点击复制上面地址进行支付，或者扫描上面二维码支付。
-`
 
 	params := strings.Split(ctx.Data(), "|")
 	distUsername := params[1]
@@ -125,21 +119,21 @@ func CreateTelegramPremiumOrder(ctx tele.Context) error {
 		usdtAmount = *dbAgentUser.ThreeMonthPrice
 		baseAmount, err = strconv.ParseFloat(*basePriceObj.V1, 64)
 		if err != nil {
-			log.Printf("base price3 set fail. %v\n", err)
+			log.Printf("base price3 设置失败. %v\n", err)
 			return err
 		}
 	} else if vipMonth == 6 {
 		usdtAmount = *dbAgentUser.SixMonthPrice
 		baseAmount, err = strconv.ParseFloat(*basePriceObj.V2, 64)
 		if err != nil {
-			log.Printf("base price3 set fail. %v\n", err)
+			log.Printf("base price3 设置失败. %v\n", err)
 			return err
 		}
 	} else if vipMonth == 12 {
 		usdtAmount = *dbAgentUser.TwelveMonthPrice
 		baseAmount, err = strconv.ParseFloat(*basePriceObj.V3, 64)
 		if err != nil {
-			log.Printf("base price3 set fail. %v\n", err)
+			log.Printf("base price3 设置失败. %v\n", err)
 			return err
 		}
 	} else {
@@ -162,9 +156,34 @@ func CreateTelegramPremiumOrder(ctx tele.Context) error {
 		TgMsgID:           0, //先置零，登消息发出去后得到消息id后再更新
 	}
 	log.Printf("order: %+v\n", order)
-	res, err := service.CreateOrder(order)
+
+	err = HandleBalancePay(ctx, order)
 	if err != nil {
-		log.Printf("fail to create order: %v\n", err)
+		log.Printf("余额支付失败，尝试USDT支付: %v\n", err)
+		// 只有当余额支付失败时才进行USDT支付
+		err = HandleUsdtPay(ctx, order)
+		if err != nil {
+			return err // 返回USDT支付的错误，如果也失败了
+		}
+	}
+
+	return nil
+}
+
+// 使用USDT支付
+func HandleUsdtPay(ctx tele.Context, order *model.Order) error {
+	orderFormatText := `❗️❗️❗️请注意：网络必须是TRC\-20，否则无法到账
+❗️❗️❗️请注意，金额必须与下面的一致（一位都不能少）
+👇*请向以下地址转账 %s USDT*
+
+%s
+
+👆点击复制上面地址进行支付，或者扫描上面二维码支付。
+`
+	var o = query.Order
+	res, err := service.CreateOrder(order, true)
+	if err != nil {
+		log.Printf("创建订单失败: %v\n", err)
 		return ctx.Respond(&tele.CallbackResponse{
 			Text:      "系统繁忙，订单创建失败，请重试",
 			ShowAlert: true,
@@ -184,6 +203,47 @@ func CreateTelegramPremiumOrder(ctx tele.Context) error {
 	}
 	msg, _ := ctx.Bot().Send(ctx.Recipient(), context, replyMarkup)
 	_, err = o.Where(o.OrderNo.Eq(order.OrderNo)).Update(o.TgMsgID, msg.ID)
+	return err
+}
+
+// 使用余额支付
+func HandleBalancePay(ctx tele.Context, order *model.Order) error {
+	var o = query.Order
+	var u = query.User
+	res, err := service.CreateOrder(order, false)
+	if err != nil {
+		log.Printf("创建订单失败: %v\n", err)
+		return ctx.Respond(&tele.CallbackResponse{
+			Text:      "系统繁忙，订单创建失败，请重试",
+			ShowAlert: true,
+		})
+	}
+	dbUser, err := service.FindOrCreateUserByTgCtx(ctx)
+	if err != nil {
+		log.Printf("[db] 查询失败. : %v, dbuser: %v", err, dbUser)
+		return err // 返回 FindOrCreateUserByTgCtx 的错误
+	}
+	log.Printf("[order] 进行余额支付，当前余额：%+v\n", dbUser.Balance)
+	if dbUser.Balance < res.ActualAmount {
+		log.Printf("[order] 余额不足，切换为USDT支付\n")
+		ctx.Bot().Send(ctx.Recipient(), EscapeText(tele.ModeMarkdownV2, "余额不足，切换为USDT支付"))
+		return errors.New("余额不足") // 返回一个错误，触发USDT支付
+	}
+	_, err = u.Where(u.ID.Eq(dbUser.ID)).Update(u.Balance, u.Balance.Sub(res.ActualAmount))
+	if err != nil {
+		log.Printf("[db] 更新余额失败. %v\n", err)
+		return err // 返回数据库错误
+	}
+	_, err = o.Where(o.OrderNo.Eq(order.OrderNo), o.Status.Eq(1)).Update(o.Status, 2)
+	if err != nil {
+		log.Printf("[db] 更新订单失败. %v\n", err)
+		return err // 返回数据库错误
+	}
+
+	msg, _ := ctx.Bot().Send(ctx.Recipient(), EscapeText(tele.ModeMarkdownV2, "🎉🎉🎉支付成功，正在为您开通会员..."))
+	_, err = o.Where(o.OrderNo.Eq(order.OrderNo)).Update(o.TgMsgID, msg.ID)
+	task, _ := handle.NewGiftTelegramPremiumTask(order.OrderNo)
+	_, _ = mq.QueueClient.Enqueue(task)
 	return err
 }
 
