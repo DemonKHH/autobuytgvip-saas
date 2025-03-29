@@ -44,7 +44,7 @@ func StartHandler(ctx tele.Context) error {
 	startText := fmt.Sprintf(startFormatText, price3, price6, price12)
 	keyboards := &tele.ReplyMarkup{ResizeKeyboard: true}
 	keyboards.Reply(
-		// keyboards.Row(RechargeKeyboard, MineKeyboard),
+		keyboards.Row(RechargeKeyboard, MineKeyboard),
 		keyboards.Row(AgentKeyboard, CooperationKeyboard),
 	)
 	_ = ctx.Send(startText, keyboards)
