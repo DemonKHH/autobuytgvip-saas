@@ -210,7 +210,24 @@ func HandleUsdtPay(ctx tele.Context, order *model.Order) error {
 func HandleBalancePay(ctx tele.Context, order *model.Order) error {
 	var o = query.Order
 	var u = query.User
-	res, err := service.CreateOrder(order, false)
+	dbUser, err := service.FindOrCreateUserByTgCtx(ctx)
+	if err != nil {
+		log.Printf("[db] 查询失败. : %v, dbuser: %v", err, dbUser)
+		return err // 返回 FindOrCreateUserByTgCtx 的错误
+	}
+	log.Printf("[order] 进行余额支付，当前余额：%+v\n", dbUser.Balance)
+	if dbUser.Balance < order.UsdtAmount {
+		log.Printf("[order] 余额不足，切换为USDT支付\n")
+		ctx.Bot().Send(ctx.Recipient(), EscapeText(tele.ModeMarkdownV2, "余额不足，切换为USDT支付"))
+		return errors.New("余额不足") // 返回一个错误，触发USDT支付
+	}
+
+	_, err = u.Where(u.ID.Eq(dbUser.ID)).Update(u.Balance, u.Balance.Sub(order.UsdtAmount))
+	if err != nil {
+		log.Printf("[db] 更新余额失败. %v\n", err)
+		return err // 返回数据库错误
+	}
+	_, err = service.CreateOrder(order, false)
 	if err != nil {
 		log.Printf("创建订单失败: %v\n", err)
 		return ctx.Respond(&tele.CallbackResponse{
@@ -218,28 +235,11 @@ func HandleBalancePay(ctx tele.Context, order *model.Order) error {
 			ShowAlert: true,
 		})
 	}
-	dbUser, err := service.FindOrCreateUserByTgCtx(ctx)
-	if err != nil {
-		log.Printf("[db] 查询失败. : %v, dbuser: %v", err, dbUser)
-		return err // 返回 FindOrCreateUserByTgCtx 的错误
-	}
-	log.Printf("[order] 进行余额支付，当前余额：%+v\n", dbUser.Balance)
-	if dbUser.Balance < res.ActualAmount {
-		log.Printf("[order] 余额不足，切换为USDT支付\n")
-		ctx.Bot().Send(ctx.Recipient(), EscapeText(tele.ModeMarkdownV2, "余额不足，切换为USDT支付"))
-		return errors.New("余额不足") // 返回一个错误，触发USDT支付
-	}
-	_, err = u.Where(u.ID.Eq(dbUser.ID)).Update(u.Balance, u.Balance.Sub(res.ActualAmount))
-	if err != nil {
-		log.Printf("[db] 更新余额失败. %v\n", err)
-		return err // 返回数据库错误
-	}
 	_, err = o.Where(o.OrderNo.Eq(order.OrderNo), o.Status.Eq(1)).Update(o.Status, 2)
 	if err != nil {
 		log.Printf("[db] 更新订单失败. %v\n", err)
 		return err // 返回数据库错误
 	}
-
 	msg, _ := ctx.Bot().Send(ctx.Recipient(), EscapeText(tele.ModeMarkdownV2, "🎉🎉🎉支付成功，正在为您开通会员..."))
 	_, err = o.Where(o.OrderNo.Eq(order.OrderNo)).Update(o.TgMsgID, msg.ID)
 	task, _ := handle.NewGiftTelegramPremiumTask(order.OrderNo)
