@@ -27,7 +27,7 @@ func TestSearchPremiumGiftRecipient(t *testing.T) {
 	log.Printf("global.Conf: %v", global.Conf)
 	duration := 3
 
-	result1, _ := SearchPremiumGiftRecipient("@xiaoxue712", duration)
+	result1, _ := SearchPremiumGiftRecipient("@demonkinghaha", duration)
 	fmt.Printf("查询Telegram用户信息：%+v\n", result1)
 
 	result2, _ := InitGiftPremium(result1.Found.Recipient, duration)
@@ -54,5 +54,5 @@ func TestSearchPremiumGiftRecipient(t *testing.T) {
 	commentFormatter := `Telegram Premium for 3 months 
 
 Ref#%s`
-	fmt.Printf("address: %s\namount: %d\ncomment:%s\n", receiverAddress, amount, fmt.Sprintf(commentFormatter, orderSN))
+	fmt.Printf("address: %s\namount: %s\ncomment:%s\n", receiverAddress, amount, fmt.Sprintf(commentFormatter, orderSN))
 }
