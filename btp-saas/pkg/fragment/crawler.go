@@ -126,7 +126,7 @@ type Transaction struct {
 // Message represents a single message within the transaction.
 type Message struct {
 	Address string `json:"address"`
-	Amount  uint64 `json:"amount"`
+	Amount  string `json:"amount"`
 	Payload string `json:"payload"`
 }
 
@@ -177,7 +177,7 @@ type GetTonPaymentInfoResponse struct {
 			ValidUntil int `json:"valid_until"`
 			Messages   []struct {
 				Address string `json:"address"`
-				Amount  uint64 `json:"amount"`
+				Amount  string `json:"amount"`
 				Payload string `json:"payload"`
 			} `json:"messages"`
 			Source string `json:"source"`
